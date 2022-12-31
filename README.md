@@ -1,3 +1,5 @@
+![workflow](https://github.com/mavaji/go-super-tiny-compiler/actions/workflows/go.yml/badge.svg)
+
 # go-super-tiny-compiler
 A port of "Possibly the smallest compiler ever" in Go
 
