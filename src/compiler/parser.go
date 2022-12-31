@@ -7,17 +7,6 @@ import (
 type Parser struct {
 }
 
-type Node struct {
-	Type       string
-	Name       string
-	Value      string
-	Callee     *Node
-	Expression *Node
-	Params     *[]*Node
-	Arguments  *[]*Node
-	Context    *[]*Node
-}
-
 func (p *Parser) Parse(tokens []Token) (*Node, error) {
 	current := 0
 	var walk func() (*Node, error)

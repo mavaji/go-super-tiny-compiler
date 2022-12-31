@@ -8,11 +8,6 @@ import (
 type Tokenizer struct {
 }
 
-type Token struct {
-	Type  string
-	Value string
-}
-
 func (t *Tokenizer) Tokenize(input string) ([]Token, error) {
 	current := 0
 	var tokens []Token
