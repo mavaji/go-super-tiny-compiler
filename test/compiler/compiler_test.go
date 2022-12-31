@@ -1,11 +1,14 @@
-package main
+package compiler
 
-import "testing"
+import (
+	"go-super-tiny-compiler/src/compiler"
+	"testing"
+)
 
 func TestCompiler(t *testing.T) {
 	t.Run("can compile an input string", func(t *testing.T) {
-		compiler := Compiler{}
-		result, err := compiler.compile("(add 2 (subtract 4 2))")
+		compiler := compiler.Compiler{}
+		result, err := compiler.Compile("(add 2 (subtract 4 2))")
 
 		want := "add(2, subtract(4, 2));"
 		if err != nil {
@@ -17,8 +20,8 @@ func TestCompiler(t *testing.T) {
 	})
 
 	t.Run("returns error for invalid input", func(t *testing.T) {
-		compiler := Compiler{}
-		result, err := compiler.compile("(add 2 )subtract 4 2))")
+		compiler := compiler.Compiler{}
+		result, err := compiler.Compile("(add 2 )subtract 4 2))")
 
 		wantError := "syntax error: 'subtract' at position: 4"
 		if err.Error() != wantError {

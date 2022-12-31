@@ -1,9 +1,9 @@
-package main
+package compiler
 
 type Compiler struct {
 }
 
-func (c *Compiler) compile(input string) (string, error) {
+func (c *Compiler) Compile(input string) (string, error) {
 	tokenizer := Tokenizer{}
 	parser := Parser{}
 	transformer := Transformer{}
@@ -14,17 +14,17 @@ func (c *Compiler) compile(input string) (string, error) {
 		return "", err
 	}
 
-	ast, err := parser.parse(tokens)
+	ast, err := parser.Parse(tokens)
 	if err != nil {
 		return "", err
 	}
 
-	newAst, err := transformer.transform(ast)
+	newAst, err := transformer.Transform(ast)
 	if err != nil {
 		return "", err
 	}
 
-	output, err := codeGenerator.generateCode(newAst)
+	output, err := codeGenerator.GenerateCode(newAst)
 	if err != nil {
 		return "", err
 	}

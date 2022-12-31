@@ -1,9 +1,9 @@
-package main
+package compiler
 
 type Transformer struct {
 }
 
-func (t *Transformer) transform(ast *Node) (*Node, error) {
+func (t *Transformer) Transform(ast *Node) (*Node, error) {
 	newAst := &Node{
 		Type:   "Program",
 		Params: &[]*Node{},

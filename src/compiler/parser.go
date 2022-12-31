@@ -1,4 +1,4 @@
-package main
+package compiler
 
 import (
 	"fmt"
@@ -18,7 +18,7 @@ type Node struct {
 	Context    *[]*Node
 }
 
-func (p *Parser) parse(tokens []Token) (*Node, error) {
+func (p *Parser) Parse(tokens []Token) (*Node, error) {
 	current := 0
 	var walk func() (*Node, error)
 	walk = func() (*Node, error) {

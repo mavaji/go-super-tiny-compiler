@@ -1,4 +1,4 @@
-package main
+package compiler
 
 import (
 	"fmt"
@@ -8,12 +8,12 @@ import (
 type CodeGenerator struct {
 }
 
-func (g *CodeGenerator) generateCode(node *Node) (string, error) {
+func (g *CodeGenerator) GenerateCode(node *Node) (string, error) {
 	switch node.Type {
 	case "Program":
 		var result []string
 		for _, param := range *node.Params {
-			code, err := g.generateCode(param)
+			code, err := g.GenerateCode(param)
 			if err != nil {
 				return "", err
 			}
@@ -21,19 +21,19 @@ func (g *CodeGenerator) generateCode(node *Node) (string, error) {
 		}
 		return strings.Join(result, "\n"), nil
 	case "ExpressionStatement":
-		code, err := g.generateCode(node.Expression)
+		code, err := g.GenerateCode(node.Expression)
 		if err != nil {
 			return "", err
 		}
 		return code + ";", nil
 	case "CallExpression":
-		code, err := g.generateCode(node.Callee)
+		code, err := g.GenerateCode(node.Callee)
 		if err != nil {
 			return "", err
 		}
 		var result []string
 		for _, argument := range *node.Arguments {
-			code, err := g.generateCode(argument)
+			code, err := g.GenerateCode(argument)
 			if err != nil {
 				return "", err
 			}

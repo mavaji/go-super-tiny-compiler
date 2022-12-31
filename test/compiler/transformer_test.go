@@ -1,20 +1,21 @@
-package main
+package compiler
 
 import (
+	"go-super-tiny-compiler/src/compiler"
 	"reflect"
 	"testing"
 )
 
 func TestTransformer(t *testing.T) {
 	t.Run("can transform AST to a new AST", func(t *testing.T) {
-		transformer := Transformer{}
-		ast := &Node{
+		transformer := compiler.Transformer{}
+		ast := &compiler.Node{
 			Type: "Program",
-			Params: &[]*Node{
+			Params: &[]*compiler.Node{
 				{
 					Type: "CallExpression",
 					Name: "add",
-					Params: &[]*Node{
+					Params: &[]*compiler.Node{
 						{
 							Type:  "NumberLiteral",
 							Value: "2",
@@ -22,7 +23,7 @@ func TestTransformer(t *testing.T) {
 						{
 							Type: "CallExpression",
 							Name: "subtract",
-							Params: &[]*Node{
+							Params: &[]*compiler.Node{
 								{
 									Type:  "NumberLiteral",
 									Value: "4",
@@ -37,30 +38,30 @@ func TestTransformer(t *testing.T) {
 				},
 			},
 		}
-		newAst, err := transformer.transform(ast)
-		want := &Node{
+		newAst, err := transformer.Transform(ast)
+		want := &compiler.Node{
 			Type: "Program",
-			Params: &[]*Node{
+			Params: &[]*compiler.Node{
 				{
 					Type: "ExpressionStatement",
-					Expression: &Node{
+					Expression: &compiler.Node{
 						Type: "CallExpression",
-						Callee: &Node{
+						Callee: &compiler.Node{
 							Type: "Identifier",
 							Name: "add",
 						},
-						Arguments: &[]*Node{
+						Arguments: &[]*compiler.Node{
 							{
 								Type:  "NumberLiteral",
 								Value: "2",
 							},
 							{
 								Type: "CallExpression",
-								Callee: &Node{
+								Callee: &compiler.Node{
 									Type: "Identifier",
 									Name: "subtract",
 								},
-								Arguments: &[]*Node{
+								Arguments: &[]*compiler.Node{
 									{
 										Type:  "NumberLiteral",
 										Value: "4",
@@ -86,14 +87,14 @@ func TestTransformer(t *testing.T) {
 	})
 
 	t.Run("returns error when unknown type happens", func(t *testing.T) {
-		transformer := Transformer{}
-		ast := &Node{
+		transformer := compiler.Transformer{}
+		ast := &compiler.Node{
 			Type: "Program",
-			Params: &[]*Node{
+			Params: &[]*compiler.Node{
 				{
 					Type: "CallExpression",
 					Name: "add",
-					Params: &[]*Node{
+					Params: &[]*compiler.Node{
 						{
 							Type:  "NumberLiteralLPJLJL",
 							Value: "2",
@@ -101,7 +102,7 @@ func TestTransformer(t *testing.T) {
 						{
 							Type: "CallExpression",
 							Name: "subtract",
-							Params: &[]*Node{
+							Params: &[]*compiler.Node{
 								{
 									Type:  "NumberLiteral",
 									Value: "4",
@@ -116,7 +117,7 @@ func TestTransformer(t *testing.T) {
 				},
 			},
 		}
-		newAst, err := transformer.transform(ast)
+		newAst, err := transformer.Transform(ast)
 		wantError := "unknown type error: NumberLiteralLPJLJL"
 		if err.Error() != wantError {
 			t.Errorf("want error %s but got %v", wantError, err)

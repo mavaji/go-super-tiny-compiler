@@ -1,13 +1,14 @@
-package main
+package compiler
 
 import (
+	"go-super-tiny-compiler/src/compiler"
 	"reflect"
 	"testing"
 )
 
 func TestParser(t *testing.T) {
 	t.Run("can build an AST from tokens", func(t *testing.T) {
-		tokens := []Token{
+		tokens := []compiler.Token{
 			{
 				Type:  "paren",
 				Value: "(",
@@ -46,15 +47,15 @@ func TestParser(t *testing.T) {
 			},
 		}
 
-		parser := Parser{}
-		ast, err := parser.parse(tokens)
-		want := &Node{
+		parser := compiler.Parser{}
+		ast, err := parser.Parse(tokens)
+		want := &compiler.Node{
 			Type: "Program",
-			Params: &[]*Node{
+			Params: &[]*compiler.Node{
 				{
 					Type: "CallExpression",
 					Name: "add",
-					Params: &[]*Node{
+					Params: &[]*compiler.Node{
 						{
 							Type:  "NumberLiteral",
 							Value: "2",
@@ -62,7 +63,7 @@ func TestParser(t *testing.T) {
 						{
 							Type: "CallExpression",
 							Name: "subtract",
-							Params: &[]*Node{
+							Params: &[]*compiler.Node{
 								{
 									Type:  "NumberLiteral",
 									Value: "4",
@@ -87,7 +88,7 @@ func TestParser(t *testing.T) {
 	})
 
 	t.Run("returns error for syntax errors", func(t *testing.T) {
-		tokens := []Token{
+		tokens := []compiler.Token{
 			{
 				Type:  "paren",
 				Value: ")",
@@ -126,8 +127,8 @@ func TestParser(t *testing.T) {
 			},
 		}
 
-		parser := Parser{}
-		ast, err := parser.parse(tokens)
+		parser := compiler.Parser{}
+		ast, err := parser.Parse(tokens)
 		wantError := "syntax error: ')' at position: 0"
 		if err.Error() != wantError {
 			t.Errorf("want error %s but got %v", wantError, err)

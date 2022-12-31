@@ -1,15 +1,16 @@
-package main
+package compiler
 
 import (
+	"go-super-tiny-compiler/src/compiler"
 	"reflect"
 	"testing"
 )
 
 func TestTokenizer(t *testing.T) {
-	tokenizer := Tokenizer{}
+	tokenizer := compiler.Tokenizer{}
 	t.Run("can tokenize an input string", func(t *testing.T) {
 		input := "(add 2 (subtract 4 2))"
-		want := []Token{
+		want := []compiler.Token{
 			{
 				Type:  "paren",
 				Value: "(",
