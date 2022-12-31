@@ -5,46 +5,75 @@ import (
 	"strings"
 )
 
-type CodeGenerator struct {
+type codeGenerator struct {
 }
 
-func (g *CodeGenerator) GenerateCode(node *Node) (string, error) {
+func NewCodeGenerator() codeGenerator {
+	return codeGenerator{}
+}
+
+func (g *codeGenerator) GenerateCode(node *Node) (string, error) {
 	switch node.Type {
 	case "Program":
-		var result []string
-		for _, param := range *node.Params {
-			code, err := g.GenerateCode(param)
-			if err != nil {
-				return "", err
-			}
-			result = append(result, code)
-		}
-		return strings.Join(result, "\n"), nil
+		return g.programCode(node)
 	case "ExpressionStatement":
-		code, err := g.GenerateCode(node.Expression)
-		if err != nil {
-			return "", err
-		}
-		return code + ";", nil
+		return g.expressionStatementCode(node)
 	case "CallExpression":
-		code, err := g.GenerateCode(node.Callee)
-		if err != nil {
-			return "", err
-		}
-		var result []string
-		for _, argument := range *node.Arguments {
-			code, err := g.GenerateCode(argument)
-			if err != nil {
-				return "", err
-			}
-			result = append(result, code)
-		}
-		return code + "(" + strings.Join(result, ", ") + ")", nil
+		return g.callExpressionCode(node)
 	case "Identifier":
-		return node.Name, nil
+		return g.identifierCode(node)
 	case "NumberLiteral":
-		return node.Value, nil
+		return g.numberLiteralCode(node)
 	default:
 		return "", fmt.Errorf("unknown type error: %s", node.Type)
 	}
+}
+
+func (g *codeGenerator) numberLiteralCode(node *Node) (string, error) {
+	return node.Value, nil
+}
+
+func (g *codeGenerator) identifierCode(node *Node) (string, error) {
+	return node.Name, nil
+}
+
+func (g *codeGenerator) callExpressionCode(node *Node) (string, error) {
+	calleeCode, err := g.GenerateCode(node.Callee)
+	if err != nil {
+		return "", err
+	}
+
+	var argumentsCode []string
+	for _, argument := range *node.Arguments {
+		argumentCode, err := g.GenerateCode(argument)
+		if err != nil {
+			return "", err
+		}
+		argumentsCode = append(argumentsCode, argumentCode)
+	}
+
+	return calleeCode + "(" + strings.Join(argumentsCode, ", ") + ")", nil
+}
+
+func (g *codeGenerator) expressionStatementCode(node *Node) (string, error) {
+	expressionCode, err := g.GenerateCode(node.Expression)
+	if err != nil {
+		return "", err
+	}
+
+	return expressionCode + ";", nil
+}
+
+func (g *codeGenerator) programCode(node *Node) (string, error) {
+	var programCode []string
+
+	for _, param := range *node.Params {
+		code, err := g.GenerateCode(param)
+		if err != nil {
+			return "", err
+		}
+		programCode = append(programCode, code)
+	}
+
+	return strings.Join(programCode, "\n"), nil
 }

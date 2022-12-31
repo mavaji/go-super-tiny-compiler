@@ -8,7 +8,7 @@ import (
 
 func TestTransformer(t *testing.T) {
 	t.Run("can transform AST to a new AST", func(t *testing.T) {
-		transformer := compiler.Transformer{}
+		transformer := compiler.NewTransformer()
 		ast := &compiler.Node{
 			Type: "Program",
 			Params: &[]*compiler.Node{
@@ -87,7 +87,7 @@ func TestTransformer(t *testing.T) {
 	})
 
 	t.Run("returns error when unknown type happens", func(t *testing.T) {
-		transformer := compiler.Transformer{}
+		transformer := compiler.NewTransformer()
 		ast := &compiler.Node{
 			Type: "Program",
 			Params: &[]*compiler.Node{

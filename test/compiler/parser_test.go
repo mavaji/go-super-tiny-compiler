@@ -47,7 +47,7 @@ func TestParser(t *testing.T) {
 			},
 		}
 
-		parser := compiler.Parser{}
+		parser := compiler.NewParser()
 		ast, err := parser.Parse(tokens)
 		want := &compiler.Node{
 			Type: "Program",
@@ -127,7 +127,7 @@ func TestParser(t *testing.T) {
 			},
 		}
 
-		parser := compiler.Parser{}
+		parser := compiler.NewParser()
 		ast, err := parser.Parse(tokens)
 		wantError := "syntax error: ')' at position: 0"
 		if err.Error() != wantError {

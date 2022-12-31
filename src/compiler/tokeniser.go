@@ -5,10 +5,21 @@ import (
 	"regexp"
 )
 
-type Tokenizer struct {
+type tokenizer struct {
+	whiteSpace *regexp.Regexp
+	numbers    *regexp.Regexp
+	letters    *regexp.Regexp
 }
 
-func (t *Tokenizer) Tokenize(input string) ([]Token, error) {
+func NewTokenizer() tokenizer {
+	return tokenizer{
+		whiteSpace: regexp.MustCompile(`\s`),
+		numbers:    regexp.MustCompile(`[0-9]`),
+		letters:    regexp.MustCompile(`[a-z]`),
+	}
+}
+
+func (t *tokenizer) Tokenize(input string) ([]Token, error) {
 	current := 0
 	var tokens []Token
 	for current < len(input) {
@@ -32,16 +43,14 @@ func (t *Tokenizer) Tokenize(input string) ([]Token, error) {
 			continue
 		}
 
-		whiteSpace := regexp.MustCompile(`\s`)
-		if whiteSpace.MatchString(string(char)) {
+		if t.whiteSpace.MatchString(string(char)) {
 			current += 1
 			continue
 		}
 
-		numbers := regexp.MustCompile(`[0-9]`)
-		if numbers.MatchString(string(char)) {
+		if t.numbers.MatchString(string(char)) {
 			value := ""
-			for numbers.MatchString(string(char)) {
+			for t.numbers.MatchString(string(char)) {
 				value += string(char)
 				current += 1
 				char = input[current]
@@ -54,10 +63,9 @@ func (t *Tokenizer) Tokenize(input string) ([]Token, error) {
 			continue
 		}
 
-		letters := regexp.MustCompile(`[a-z]`)
-		if letters.MatchString(string(char)) {
+		if t.letters.MatchString(string(char)) {
 			value := ""
-			for letters.MatchString(string(char)) {
+			for t.letters.MatchString(string(char)) {
 				value += string(char)
 				current += 1
 				char = input[current]

@@ -7,7 +7,7 @@ import (
 )
 
 func TestTokenizer(t *testing.T) {
-	tokenizer := compiler.Tokenizer{}
+	tokenizer := compiler.NewTokenizer()
 	t.Run("can tokenize an input string", func(t *testing.T) {
 		input := "(add 2 (subtract 4 2))"
 		want := []compiler.Token{

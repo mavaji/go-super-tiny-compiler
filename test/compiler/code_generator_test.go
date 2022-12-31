@@ -7,7 +7,7 @@ import (
 
 func TestCodeGenerator(t *testing.T) {
 	t.Run("can generate code from AST", func(t *testing.T) {
-		codeGenerator := compiler.CodeGenerator{}
+		codeGenerator := compiler.NewCodeGenerator()
 		ast := &compiler.Node{
 			Type: "Program",
 			Params: &[]*compiler.Node{
@@ -57,7 +57,7 @@ func TestCodeGenerator(t *testing.T) {
 	})
 
 	t.Run("returns error when unknown node type happens", func(t *testing.T) {
-		codeGenerator := compiler.CodeGenerator{}
+		codeGenerator := compiler.NewCodeGenerator()
 		ast := &compiler.Node{
 			Type: "Program",
 			Params: &[]*compiler.Node{

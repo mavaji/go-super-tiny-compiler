@@ -2,10 +2,14 @@ package compiler
 
 import "fmt"
 
-type Transformer struct {
+type transformer struct {
 }
 
-func (t *Transformer) Transform(ast *Node) (*Node, error) {
+func NewTransformer() transformer {
+	return transformer{}
+}
+
+func (t *transformer) Transform(ast *Node) (*Node, error) {
 	newAst := &Node{
 		Type:   "Program",
 		Params: &[]*Node{},
@@ -21,7 +25,7 @@ func (t *Transformer) Transform(ast *Node) (*Node, error) {
 	return newAst, nil
 }
 
-func (t *Transformer) traverse(ast *Node) error {
+func (t *transformer) traverse(ast *Node) error {
 	err := t.traverseNode(ast, nil)
 	if err != nil {
 		return err
@@ -30,7 +34,7 @@ func (t *Transformer) traverse(ast *Node) error {
 	return nil
 }
 
-func (t *Transformer) traverseArray(array *[]*Node, parent *Node) error {
+func (t *transformer) traverseArray(array *[]*Node, parent *Node) error {
 	for _, child := range *array {
 		err := t.traverseNode(child, parent)
 		if err != nil {
@@ -40,7 +44,7 @@ func (t *Transformer) traverseArray(array *[]*Node, parent *Node) error {
 	return nil
 }
 
-func (t *Transformer) traverseNode(node *Node, parent *Node) error {
+func (t *transformer) traverseNode(node *Node, parent *Node) error {
 	visitor := t.getVisitor(node.Type)
 	if visitor != nil {
 		visitor.enter(node, parent)
@@ -116,7 +120,7 @@ func (c callExpressionVisitor) enter(node *Node, parent *Node) {
 func (c callExpressionVisitor) exit(node *Node, parent *Node) {
 }
 
-func (t *Transformer) getVisitor(nodeType string) visitor {
+func (t *transformer) getVisitor(nodeType string) visitor {
 	switch nodeType {
 	case "NumberLiteral":
 		return numberLiteralVisitor{}
